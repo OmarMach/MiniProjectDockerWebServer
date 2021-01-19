@@ -1,21 +1,41 @@
 from flask import Flask, render_template, request
+from joblib import load
+
+import librosa
+import os
+import pandas as pd
+
+from audioFileConversion import get_features
+from werkzeug.utils import secure_filename
+
 
 app = Flask('MiniProjetDocker')
 
 
 @app.route('/')
-def show_predict_stock_form():
+def index_page():
     return render_template('predictorform.html')
 
 
 @app.route('/results', methods=['POST'])
 def results():
-    form = request.form
     if request.method == 'POST':
-      # write your function that loads the model
-      model = get_model()  # you can use pickle to load the trained model
-       year = request.form['year']
-       predicted_stock_price = model.predict(year)
-       return render_template('resultsform.html', year=year,   predicted_price=predicted_stock_price)
+        if not request.files['file']:
+            return render_template('resultsform.html', error='Please provide a valid file.')
 
- app.run("localhost", "9999", debug=True)
+        file = request.files['file']
+
+        model = load(filename='./models/svc.joblib')
+
+        signal, sr = librosa.load(file)
+        features = get_features(signal, sr)
+
+        result = model.predict(features)
+
+        print('The predicted genre is using SVM is : %s' % result[0])
+        print('The predicted genre is using kNN is : %s' % result[0])
+
+        return render_template('resultsform.html',  predicted_genre=result[0])
+
+
+app.run("localhost", "9999", debug=True)

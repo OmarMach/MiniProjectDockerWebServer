@@ -1,15 +1,14 @@
 <!doctype html>
 <html>
  <head>
- <title>Stock Pricer</title>
+    <title>Stock Pricer</title>
  </head>
  <body>
- <h3>Year:</h3>
- <div>{{ year }}</div>
- 
- <h3>Stock Price:</h3>
- <div>This is the predicted stock price <strong>{{ predicted_price }}</strong>%).</div>
- </div>
- </div>
+   {% if error %}
+   {{ error }}
+   {% endif %}
+   {% if predicted_genre %}
+   <div>The genre of this song is :  <strong>{{ predicted_genre }}</strong>.</div>
+    {% endif %}
  </body>
 </html>
