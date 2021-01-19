@@ -1,6 +1,14 @@
-FROM python
+FROM python:3.8-slim-buster
+
 WORKDIR /usr/src/app
-COPY . /usr/src/app
-RUN pip install -r requirements.txt
-CMD ["python", "/usr/src/app/app.py"]
+
+COPY . .
+
+RUN apt-get update -y && apt-get install -y --no-install-recommends build-essential gcc \libsndfile1 
+
+RUN apt-get install libsndfile1
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+CMD ["python", "./app.py"]
 
