@@ -10,5 +10,7 @@ RUN apt-get install libsndfile1
 
 RUN pip install --no-cache-dir -r requirements.txt
 
+EXPOSE 9999 
+
 CMD ["python", "./app.py"]
 
